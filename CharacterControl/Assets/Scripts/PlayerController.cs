@@ -89,7 +89,7 @@ public class PlayerController : MonoBehaviour
             Vector3 startPos = dartSpawnPoint.position;
             
             // End position is forward from dart spawn point
-            Vector3 endPos = startPos + dartSpawnPoint.forward * aimRange;
+            Vector3 endPos = startPos + dartSpawnPoint.right * aimRange;
             
             // Set line positions
             aimLine.SetPosition(0, startPos);
@@ -105,7 +105,7 @@ public class PlayerController : MonoBehaviour
             Rigidbody rb = dart.GetComponent<Rigidbody>();
             if (rb != null)
             {
-                rb.AddForce(dartSpawnPoint.forward * dartForce, ForceMode.Impulse);
+                rb.AddForce(-dartSpawnPoint.up * dartForce, ForceMode.Impulse);
             }
             
             // Add trail to dart
