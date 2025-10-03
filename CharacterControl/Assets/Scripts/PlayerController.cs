@@ -1,4 +1,5 @@
 // Enhanced PlayerController.cs - Simple version with aiming trail
+using System.Collections;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -24,7 +25,8 @@ public class PlayerController : MonoBehaviour
     public float aimRange = 25f;
     
     private float currentRotation = 0f;
-    
+    public ObjectPool dartPool;
+
     void Start()
     {
         SetupAimingLine();
@@ -101,7 +103,9 @@ public class PlayerController : MonoBehaviour
     {
         if (dartPrefab != null && dartSpawnPoint != null)
         {
-            GameObject dart = Instantiate(dartPrefab, dartSpawnPoint.position, dartSpawnPoint.rotation);
+            GameObject dart = dartPool.GetObject();
+            dart.transform.position = dartSpawnPoint.position;
+            dart.transform.rotation = dartSpawnPoint.rotation;
             Rigidbody rb = dart.GetComponent<Rigidbody>();
             if (rb != null)
             {
@@ -110,18 +114,29 @@ public class PlayerController : MonoBehaviour
             
             // Add trail to dart
             AddTrailToDart(dart);
-            
+
             // Destroy dart after 3 seconds
-            Destroy(dart, 3f);
+            StartCoroutine(DeactivateDart(dart));
         }
+    }
+
+    IEnumerator DeactivateDart(GameObject dart)
+    {
+        yield return new WaitForSeconds(3f);
+        dartPool.ReturnObject(dart);
     }
     
     void AddTrailToDart(GameObject dart)
     {
-        TrailRenderer trail = dart.AddComponent<TrailRenderer>();
+        TrailRenderer trail = dart.GetComponent<TrailRenderer>();
         
+        if (trail == null)
+        {
+            trail = dart.AddComponent<TrailRenderer>();
+        }
+
         // Configure trail
-        trail.material = new Material(Shader.Find("Sprites/Default"));
+        //trail.material = new Material(Shader.Find("Sprites/Default"));
         trail.startWidth = 0.08f;
         trail.endWidth = 0.02f;
         trail.time = 0.8f;
