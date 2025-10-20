@@ -57,6 +57,7 @@ public class PlayerController : MonoBehaviour
     {
         HandleInput();
         UpdateAimingLine();
+        
     }
     
     void HandleInput()
@@ -65,12 +66,12 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKey(leftKey))
         {
             currentRotation -= rotationSpeed * Time.deltaTime;
-            currentRotation = Mathf.Clamp(currentRotation, -45f, 45f);
+            currentRotation = Mathf.Clamp(currentRotation, -55f, 55f);
         }
         if (Input.GetKey(rightKey))
         {
             currentRotation += rotationSpeed * Time.deltaTime;
-            currentRotation = Mathf.Clamp(currentRotation, -45f, 45f);
+            currentRotation = Mathf.Clamp(currentRotation, -55f, 55f);
         }
         
         // Apply rotation
@@ -109,7 +110,7 @@ public class PlayerController : MonoBehaviour
             Rigidbody rb = dart.GetComponent<Rigidbody>();
             if (rb != null)
             {
-                rb.AddForce(-dartSpawnPoint.up * dartForce, ForceMode.Impulse);
+                rb.AddForce(dartSpawnPoint.up * dartForce, ForceMode.Impulse);
             }
             
             // Add trail to dart
